@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Bulk scan — Tool Lookup{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Bulk scan</h1>
+  <p>Upload an Excel file (columns: <strong>Tool Name</strong>, <strong>Vendor</strong>; optional: Version, Notes). Max {{ max_scan_rows }} rows. Results in under 2 minutes. Inventory version: <strong>{{ inventory_version }}</strong>.</p>
+</div>
+
+<div class="card">
+  <form method="post" action="{{ url_for('scan_upload') }}" enctype="multipart/form-data">
+    <label for="file">Excel file (.xlsx)</label>
+    <input id="file" name="file" type="file" accept=".xlsx" required>
+    <button type="submit">Run scan</button>
+  </form>
+</div>
+
+<div class="btn-group">
+  <a href="{{ url_for('download_template') }}" class="btn btn-secondary">Download template</a>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Dashboard</a>
+</div>
+{% endblock %}

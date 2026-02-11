@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Scan results — Tool Lookup{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Scan results</h1>
+  <p>Download your results as Excel or PDF. Each row shows availability: Available, Unavailable, or Requires review.</p>
+</div>
+
+<div class="card">
+  <h2 style="margin-top: 0;">Download</h2>
+  <div class="btn-group">
+    {% if has_excel %}
+    <a href="{{ url_for('scan_download', token=token, format='excel') }}" class="btn btn-primary">Download Excel</a>
+    {% endif %}
+    {% if has_pdf %}
+    <a href="{{ url_for('scan_download', token=token, format='pdf') }}" class="btn btn-secondary">Download PDF</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="btn-group">
+  <a href="{{ url_for('scan_upload') }}" class="btn btn-secondary">Run another scan</a>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Dashboard</a>
+</div>
+{% endblock %}

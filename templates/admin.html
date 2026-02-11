@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Admin — Tool Lookup{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Admin</h1>
+  <p>Update matching rules or thresholds for tool lookup accuracy.</p>
+</div>
+
+<div class="card">
+  <h2 style="margin-top: 0;">Matching rules</h2>
+  <p style="margin: 0 0 0.75rem; color: var(--text-muted);">Edit <code style="background: var(--surface-hover); padding: 0.15rem 0.4rem; border-radius: 4px;">config.py</code> and restart the app to change:</p>
+  <ul style="margin: 0; padding-left: 1.25rem; color: var(--text-muted);">
+    <li>Match score ≥ 85% → Tool <strong>available</strong></li>
+    <li>Match score 60–84% → <strong>Requires further review</strong></li>
+    <li>Match score &lt; 60% → Tool <strong>unavailable</strong></li>
+  </ul>
+</div>
+
+<div class="btn-group">
+  <a href="{{ url_for('audit') }}" class="btn btn-secondary">Audit log</a>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Dashboard</a>
+</div>
+{% endblock %}

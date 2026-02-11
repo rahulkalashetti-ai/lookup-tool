@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Tool Lookup{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <p>Welcome back, <strong>{{ user.username }}</strong>.</p>
+</div>
+
+{% if user.role == 'infosec' %}
+  <div class="card">
+    <h2>Verified inventory</h2>
+    <p style="margin: 0 0 1rem; color: var(--text-muted); font-size: 0.95rem;">Upload and manage the official tool list. Only Infosec can update it.</p>
+    <div class="btn-group">
+      <a href="{{ url_for('infosec_upload') }}" class="btn btn-primary">Upload verified inventory</a>
+      <a href="{{ url_for('infosec_versions') }}" class="btn btn-secondary">Version history</a>
+    </div>
+  </div>
+{% elif user.role == 'admin' %}
+  <div class="card">
+    <h2>Actions</h2>
+    <p style="margin: 0 0 1rem; color: var(--text-muted); font-size: 0.95rem;">Full access: run scans, view audit, manage settings.</p>
+    <div class="btn-group">
+      <a href="{{ url_for('tool_lookup') }}" class="btn btn-primary">Lookup tool</a>
+      <a href="{{ url_for('scan_upload') }}" class="btn btn-secondary">Bulk scan</a>
+      <a href="{{ url_for('audit') }}" class="btn btn-secondary">Audit log</a>
+      <a href="{{ url_for('admin') }}" class="btn btn-secondary">Admin</a>
+    </div>
+  </div>
+{% else %}
+  <div class="card">
+    <h2>Lookup a tool</h2>
+    {% if has_verified_inventory %}
+      <p style="margin: 0 0 1rem; color: var(--text-muted); font-size: 0.95rem;">Check if a tool is in the verified inventory. Inventory version: <strong>{{ inventory_version }}</strong>.</p>
+      <div class="btn-group">
+        <a href="{{ url_for('tool_lookup') }}" class="btn btn-primary">Lookup tool by name</a>
+        <a href="{{ url_for('scan_upload') }}" class="btn btn-secondary">Bulk scan (Excel)</a>
+      </div>
+    {% else %}
+      <div class="flash error">No verified inventory yet. Ask Infosec to upload one.</div>
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="card">
+  <h2>Template</h2>
+  <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Download the Excel template for Tool Name, Vendor, and optional columns.</p>
+  <div class="btn-group" style="margin-top: 0.75rem;">
+    <a href="{{ url_for('download_template') }}" class="btn btn-secondary">Download template</a>
+  </div>
+</div>
+{% endblock %}

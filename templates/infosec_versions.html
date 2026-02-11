@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Version history — Tool Lookup{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Version history</h1>
+  <p>All Infosec uploads are versioned for audit.</p>
+</div>
+
+<div class="card">
+  {% if history %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>Filename</th>
+          <th>Uploaded by</th>
+          <th>Date</th>
+          <th>Rows</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in history %}
+        <tr>
+          <td><strong>{{ row.version }}</strong></td>
+          <td>{{ row.filename }}</td>
+          <td>{{ row.uploaded_by }}</td>
+          <td>{{ row.uploaded_at }}</td>
+          <td>{{ row.row_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p style="margin: 0; color: var(--text-muted);">No versions yet. <a href="{{ url_for('infosec_upload') }}">Upload the first verified inventory</a>.</p>
+  {% endif %}
+</div>
+
+<div class="btn-group">
+  <a href="{{ url_for('infosec_upload') }}" class="btn btn-primary">Upload new version</a>
+  <a href="{{ url_for('audit') }}" class="btn btn-secondary">Audit log</a>
+</div>
+{% endblock %}

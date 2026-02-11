@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Tool Availability Lookup{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #6366f1;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #4f46e5;
+      --accent-hover: #4338ca;
+      --success: #059669;
+      --success-bg: #d1fae5;
+      --warning: #d97706;
+      --warning-bg: #fef3c7;
+      --error: #dc2626;
+      --error-bg: #fee2e2;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 0 1.5rem; }
+    /* Header */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow);
+    }
+    header .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      min-height: 56px;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .logo:hover { color: var(--accent); }
+    .nav {
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .nav a:hover { color: var(--accent); background: var(--surface-hover); }
+    .nav .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 0.5rem;
+      padding-left: 0.75rem;
+      border-left: 1px solid var(--border);
+    }
+    .nav .username { font-size: 0.9rem; color: var(--text-muted); }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .badge.infosec { background: #e0e7ff; color: #3730a3; }
+    .badge.user { background: #e2e8f0; color: #475569; }
+    .badge.admin { background: #fef3c7; color: #92400e; }
+    .badge.auditor { background: #d1fae5; color: #065f46; }
+    .nav .logout { color: var(--text-muted); font-size: 0.9rem; }
+    .nav .logout:hover { color: var(--error); }
+    /* Main */
+    main { padding: 1.75rem 0 3rem; }
+    .page-header { margin-bottom: 1.5rem; }
+    .page-header h1 { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.25rem; letter-spacing: -0.02em; }
+    .page-header p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    .card h2 { font-size: 1.1rem; margin: 0 0 0.75rem; font-weight: 600; }
+    /* Buttons */
+    button, .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+    .btn, button { min-height: 40px; }
+    .btn-primary, button[type="submit"] {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover, button[type="submit"]:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+    }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--surface-hover); border-color: var(--text-muted); }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    /* Forms */
+    form label {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="file"] {
+      padding: 0.55rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: 1rem;
+      width: 100%;
+      max-width: 360px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    form input[type="text"]:focus,
+    form input[type="password"]:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+    form input[type="file"] {
+      max-width: 100%;
+      padding: 0.65rem;
+      cursor: pointer;
+    }
+    /* Flash */
+    .flash {
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.25rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      border-left: 4px solid transparent;
+    }
+    .flash.error {
+      background: var(--error-bg);
+      color: #991b1b;
+      border-left-color: var(--error);
+    }
+    .flash.success {
+      background: var(--success-bg);
+      color: #065f46;
+      border-left-color: var(--success);
+    }
+    /* Tables */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; margin: 0; }
+    th, td { padding: 0.65rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th {
+      background: var(--surface-hover);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg); }
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .status-badge.available { background: var(--success-bg); color: var(--success); }
+    .status-badge.unavailable { background: var(--error-bg); color: var(--error); }
+    .status-badge.review { background: var(--warning-bg); color: var(--warning); }
+    /* Search / lookup */
+    .search-row { display: flex; gap: 0.5rem; align-items: flex-start; flex-wrap: wrap; max-width: 480px; }
+    .search-row input { flex: 1; min-width: 200px; font-size: 1.05rem; margin-bottom: 0; }
+    .search-row button { flex-shrink: 0; }
+    .result-card { margin-top: 1.5rem; }
+    .meta { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  {% if user %}
+  <header>
+    <div class="wrap">
+      <a href="{{ url_for('dashboard') }}" class="logo">Tool Lookup</a>
+      <nav class="nav">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('tool_lookup') }}">Lookup</a>
+        <a href="{{ url_for('scan_upload') }}">Bulk scan</a>
+        <a href="{{ url_for('download_template') }}">Template</a>
+        {% if user.role in ['infosec', 'admin'] %}
+        <a href="{{ url_for('infosec_upload') }}">Upload</a>
+        <a href="{{ url_for('infosec_versions') }}">Versions</a>
+        {% endif %}
+        {% if user.role in ['infosec', 'auditor', 'admin'] %}
+        <a href="{{ url_for('audit') }}">Audit log</a>
+        {% endif %}
+        {% if user.role == 'admin' %}
+        <a href="{{ url_for('admin') }}">Admin</a>
+        {% endif %}
+        <span class="user-info">
+          <span class="username">{{ user.username }}</span>
+          <span class="badge {{ user.role }}">{{ user.role }}</span>
+        </span>
+        <a href="{{ url_for('logout') }}" class="logout">Log out</a>
+      </nav>
+    </div>
+  </header>
+  {% endif %}
+  <main>
+    <div class="wrap">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+          <div class="flash {{ category }}">{{ msg }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</body>
+</html>
