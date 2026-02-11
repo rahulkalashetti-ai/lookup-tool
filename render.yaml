@@ -1,0 +1,10 @@
+# Render Blueprint - connect this repo and Render will use these settings
+services:
+  - type: web
+    name: lookup-tool
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m gunicorn -w 1 -b 0.0.0.0:$PORT app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
