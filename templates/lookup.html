@@ -2,55 +2,79 @@
 {% block title %}Lookup tool — ToolHub{% endblock %}
 {% block content %}
 <div class="page-header">
-  <h1>Lookup tool</h1>
-  <p>Search by tool name. You’ll see <strong>Yes</strong> with status, or <strong>No</strong> if it’s not in the inventory. Version <strong>{{ inventory_version }}</strong>.</p>
+  <h1>Find a tool</h1>
+  <p>Search by name or vendor. Add an optional vendor to narrow results. Inventory version <strong>{{ inventory_version }}</strong>.</p>
 </div>
 
-<div class="card">
-  <form method="post" action="{{ url_for('tool_lookup') }}">
-    <label for="tool_name">Tool name</label>
+<div class="card card-hero">
+  <form method="post" action="{{ url_for('tool_lookup') }}" id="lookup-form">
+    <label for="tool_name">Tool or application name</label>
     <div class="search-row">
-      <input id="tool_name" name="tool_name" type="text" value="{{ query }}" placeholder="e.g. Slack, Jira, GitHub" required autofocus>
+      <input id="tool_name" name="tool_name" type="text" value="{{ query }}" placeholder="e.g. Slack, Jira, GitHub, ServiceNow" required autofocus>
       <button type="submit">Search</button>
     </div>
+    <label for="vendor" class="optional-label">Vendor name <span class="muted">(optional)</span></label>
+    <input id="vendor" name="vendor" type="text" value="{{ vendor_query }}" placeholder="e.g. Atlassian, Microsoft" style="max-width: 300px; margin-bottom: 0.5rem;">
   </form>
 </div>
 
 {% if result is not none %}
   <div class="card result-card">
     {% if result.found %}
-      <p class="flash success" style="margin-bottom: 1rem;"><strong>Yes</strong> — Tool found in inventory.</p>
+      <p class="flash success" style="margin-bottom: 1rem;">
+        Found <strong>{{ result.matches|length }}</strong> match{% if result.matches|length != 1 %}es{% endif %}.
+      </p>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Tool name</th>
-              <th>Vendor</th>
-              <th>Version</th>
-              <th>Status</th>
-              <th>Notes</th>
+              <th>Name</th>
+              <th>Vendor Name</th>
+              <th>Workflow Status</th>
+              <th>Match</th>
+              <th>Requester</th>
+              <th>Application Active/In Use?</th>
             </tr>
           </thead>
           <tbody>
             {% for row in result.matches %}
             <tr>
-              <td><strong>{{ row.get('Tool Name', '') }}</strong></td>
-              <td>{{ row.get('Vendor', '') }}</td>
-              <td>{{ row.get('Version', '') }}</td>
-              <td><span class="status-badge available">{{ row.get('Status', 'Available') }}</span></td>
-              <td>{{ row.get('Notes', '') }}</td>
+              <td><strong>{{ row.get('Name', '') }}</strong></td>
+              <td>{{ row.get('Vendor Name', '') }}</td>
+              <td><span class="status-badge available">{{ row.get('Workflow Status', '') }}</span></td>
+              <td><span class="match-score match-{{ 'exact' if row.get('match_score', 0) >= 98 else 'close' }}">{{ row.get('match_score', 0) }}%</span></td>
+              <td>{{ row.get('Requester', '') }}</td>
+              <td>{{ row.get('Application Active/In Use?', '') }}</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     {% else %}
-      <p class="flash error" style="margin: 0;"><strong>No</strong> — Tool not found in the verified inventory.</p>
+      <p class="flash error" style="margin-bottom: 1rem;">No matching tool in the verified inventory.</p>
+      {% if result.suggestions and result.suggestions|length > 0 %}
+        <p class="suggestions-title">Did you mean one of these?</p>
+        <ul class="suggestions-list">
+          {% for s in result.suggestions %}
+          <li>
+            <strong>{{ s.get('Name', '') }}</strong>
+            {% if s.get('Vendor Name') %} <span class="muted">({{ s.get('Vendor Name') }})</span>{% endif %}
+            <span class="match-score match-close">{{ s.get('match_score', 0) }}%</span>
+          </li>
+          {% endfor %}
+        </ul>
+        <p class="muted small">Try searching with one of the names above, or check spelling.</p>
+      {% else %}
+        <p class="muted">Try a different name or check spelling. You can also leave Vendor blank for a broader search.</p>
+      {% endif %}
     {% endif %}
   </div>
 {% endif %}
 
-<div class="btn-group" style="margin-top: 1rem;">
+<div class="btn-group" style="margin-top: 1.25rem;">
   <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to dashboard</a>
+  {% if query %}
+  <a href="{{ url_for('tool_lookup') }}" class="btn btn-secondary">Clear search</a>
+  {% endif %}
 </div>
 {% endblock %}

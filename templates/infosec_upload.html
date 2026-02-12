@@ -3,10 +3,10 @@
 {% block content %}
 <div class="page-header">
   <h1>Upload verified inventory</h1>
-  <p>Only Infosec can upload or replace the inventory. Use .xlsx with <strong>Tool Name</strong>, <strong>Vendor</strong> (optional: Version, Notes, Status). Max 10,000 rows.</p>
+  <p>Only Infosec can upload or replace the inventory. Use .xlsx with <strong>Name</strong> and <strong>Vendor Name</strong> (optional: Workflow Status, Requester, etc.). Max 10,000 rows.</p>
 </div>
 
-<div class="card">
+<div class="card card-hero">
   <form method="post" action="{{ url_for('infosec_upload') }}" enctype="multipart/form-data">
     <label for="file">Excel file (.xlsx)</label>
     <input id="file" name="file" type="file" accept=".xlsx" required>

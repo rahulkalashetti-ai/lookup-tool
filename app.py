@@ -13,7 +13,7 @@ from auth import verify_user, login_required, role_required, current_user
 from audit import log as audit_log, get_logs
 from storage import save_encrypted, load_encrypted, content_hash
 from excel_utils import validate_inventory_excel, validate_scan_excel
-from ai_scanner import run_scan, lookup_tool
+from ai_scanner import run_scan, lookup_tool, lookup_suggestions
 from export_results import export_excel, export_pdf
 
 app = Flask(__name__)
@@ -134,19 +134,29 @@ def tool_lookup():
             inventory_version=ver,
             result=None,
             query="",
+            vendor_query="",
         )
     query = (request.form.get("tool_name") or "").strip()
     if not query:
         flash("Enter a tool name to search.", "error")
         return redirect(url_for("tool_lookup"))
-    matches = lookup_tool(query, latest_path)
+    vendor_filter = (request.form.get("vendor") or "").strip()
+    matches = lookup_tool(query, latest_path, vendor_filter=vendor_filter)
+    suggestions = []
+    if len(matches) == 0:
+        suggestions = lookup_suggestions(query, latest_path)
     audit_log("lookup", session["username"], f"tool_name={query} matches={len(matches)}")
     return render_template(
         "lookup.html",
         user=user,
         inventory_version=ver,
-        result={"found": len(matches) > 0, "matches": matches},
+        result={
+            "found": len(matches) > 0,
+            "matches": matches,
+            "suggestions": suggestions,
+        },
         query=query,
+        vendor_query=vendor_filter,
     )
 
 # --- General user: bulk scan (optional) ---

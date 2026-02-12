@@ -6,12 +6,12 @@
   <title>Log in — ToolHub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
     body {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      background: linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: linear-gradient(160deg, #f0f4f8 0%, #e2e8f0 50%, #dbeafe 100%);
       color: #0f172a;
       margin: 0;
       min-height: 100vh;
@@ -20,67 +20,90 @@
       justify-content: center;
       padding: 1.5rem;
     }
+    .login-wrap {
+      width: 100%;
+      max-width: 400px;
+    }
     .card {
       background: #fff;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .logo-box {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
       border-radius: 12px;
-      padding: 2.25rem;
-      width: 100%;
-      max-width: 380px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
-      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: 700;
     }
     .brand {
-      font-size: 1.35rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.25rem;
+      letter-spacing: -0.03em;
       color: #0f172a;
     }
-    .sub { font-size: 0.9rem; color: #64748b; margin-bottom: 1.75rem; }
+    .sub {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-bottom: 1.75rem;
+      padding-left: 60px;
+    }
     label {
       display: block;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.4rem;
       font-size: 0.9rem;
-      font-weight: 500;
+      font-weight: 600;
       color: #334155;
     }
     input {
-      padding: 0.6rem 0.85rem;
+      padding: 0.75rem 1rem;
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 1rem;
       font-family: inherit;
       width: 100%;
       margin-bottom: 1rem;
-      transition: border-color 0.15s, box-shadow 0.15s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     input:focus {
       outline: none;
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+      border-color: #0d9488;
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
     }
     button {
       width: 100%;
-      padding: 0.65rem 1rem;
-      background: #4f46e5;
+      padding: 0.75rem 1rem;
+      background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%);
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 1rem;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
       margin-top: 0.25rem;
-      transition: background 0.15s, box-shadow 0.15s;
+      transition: box-shadow 0.2s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
     }
-    button:hover {
-      background: #4338ca;
-      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
-    }
+    button:hover { box-shadow: 0 4px 14px rgba(13, 148, 136, 0.4); }
+    button:active { transform: scale(0.98); }
     .flash {
-      padding: 0.75rem 1rem;
+      padding: 0.85rem 1rem;
       margin-bottom: 1rem;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 0.9rem;
     }
     .flash.error { background: #fee2e2; color: #991b1b; border-left: 4px solid #dc2626; }
@@ -90,29 +113,35 @@
       margin-top: 1.25rem;
       padding-top: 1rem;
       border-top: 1px solid #e2e8f0;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="brand">ToolHub</div>
-    <p class="sub">Sign in to ToolHub</p>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for c, m in messages %}
-        <div class="flash {{ c }}">{{ m }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-    <form method="post" action="{{ url_for('login') }}">
-      <input type="hidden" name="next" value="{{ next }}">
-      <label for="username">Username</label>
-      <input id="username" name="username" type="text" required autofocus placeholder="e.g. user">
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password" required placeholder="••••••••">
-      <button type="submit">Log in</button>
-    </form>
-    <p class="hint">Demo: user / user &nbsp;·&nbsp; infosec / infosec</p>
+  <div class="login-wrap">
+    <div class="card">
+      <div class="brand-wrap">
+        <div class="logo-box">◇</div>
+        <span class="brand">ToolHub</span>
+      </div>
+      <p class="sub">Sign in to look up tools and manage inventory</p>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for c, m in messages %}
+          <div class="flash {{ c }}">{{ m }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <form method="post" action="{{ url_for('login') }}">
+        <input type="hidden" name="next" value="{{ next }}">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" required autofocus placeholder="Enter your username">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required placeholder="Enter your password">
+        <button type="submit">Log in</button>
+      </form>
+      <p class="hint">Demo: user / user · infosec / infosec</p>
+    </div>
   </div>
 </body>
 </html>

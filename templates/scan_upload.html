@@ -3,10 +3,10 @@
 {% block content %}
 <div class="page-header">
   <h1>Bulk scan</h1>
-  <p>Upload an Excel file (columns: <strong>Tool Name</strong>, <strong>Vendor</strong>; optional: Version, Notes). Max {{ max_scan_rows }} rows. Results in under 2 minutes. Inventory version: <strong>{{ inventory_version }}</strong>.</p>
+  <p>Upload an Excel file (columns: <strong>Name</strong>, <strong>Vendor Name</strong>; optional: Workflow Status, Requester, etc.). Max {{ max_scan_rows }} rows. Results in under 2 minutes. Inventory version: <strong>{{ inventory_version }}</strong>.</p>
 </div>
 
-<div class="card">
+<div class="card card-hero">
   <form method="post" action="{{ url_for('scan_upload') }}" enctype="multipart/form-data">
     <label for="file">Excel file (.xlsx)</label>
     <input id="file" name="file" type="file" accept=".xlsx" required>

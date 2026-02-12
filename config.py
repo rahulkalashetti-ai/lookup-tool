@@ -25,9 +25,17 @@ DB_PATH = BASE_DIR / "data" / "app.db"
 for d in (UPLOAD_FOLDER, VERIFIED_FOLDER, RESULTS_FOLDER, VERSION_FOLDER, BASE_DIR / "data"):
     d.mkdir(parents=True, exist_ok=True)
 
-# Required Excel columns
-REQUIRED_COLUMNS = ["Tool Name", "Vendor"]
-OPTIONAL_COLUMNS = ["Version", "Notes", "Status"]
+# Excel columns (must match your sheet)
+REQUIRED_COLUMNS = ["Name", "Vendor Name"]
+OPTIONAL_COLUMNS = [
+    "Workflow Status",
+    "Requester",
+    "Reason for delay",
+    "Created At",
+    "Request Age",
+    "Application Active/In Use?",
+    "Vendor Account Manager Email Address",
+]
 ALL_COLUMNS = REQUIRED_COLUMNS + OPTIONAL_COLUMNS
 
 # Matching thresholds for AI scan (availability decision)
