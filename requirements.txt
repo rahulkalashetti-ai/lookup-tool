@@ -1,4 +1,4 @@
-# Tool Availability Lookup - Excel-Based System
+# ToolHub
 # Use versions compatible with Python 3.13 (pandas 2.1.x does not build on 3.13)
 Flask>=3.0.0
 Werkzeug>=3.0.1

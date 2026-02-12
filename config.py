@@ -1,4 +1,4 @@
-"""Configuration for Tool Availability Lookup."""
+"""Configuration for ToolHub."""
 import os
 from pathlib import Path
 

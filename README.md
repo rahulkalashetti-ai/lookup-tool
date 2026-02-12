@@ -1,4 +1,4 @@
-# Tool Availability Lookup
+# ToolHub
 
 Infosec uploads a verified tool inventory (Excel). Users look up tools by name and get Yes/No + status.
 

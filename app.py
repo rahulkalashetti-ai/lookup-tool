@@ -1,5 +1,5 @@
 """
-Tool Availability Lookup — Excel-Based System (PRD implementation).
+ToolHub — Tool availability lookup (Infosec inventory, user lookup).
 Run: flask --app app run
 """
 import io
